@@ -19,15 +19,24 @@ def parse_numbers(string):
 
 def get_muls(rows):
   count = 0
-  pattern = r"mul\((\d{1,3}),(\d{1,3})\)"
+  mul_pattern = r"mul\((\d{1,3}),(\d{1,3})\)"
+  do_pattern = r'do()'
+  dont_pattern = r"don't()"
+  do = True
   
   for row in rows:
     index = 0
     length = len(row)
       
-    while index < length - 6:  
-      match = re.match(pattern, row[index:])
-      if match:
+    while index < length - 6: 
+      enable = re.match(do_pattern, row[index:])
+      disable = re.match(dont_pattern, row[index:])
+      if enable:
+        do = True
+      if disable:
+        do = False
+      match = re.match(mul_pattern, row[index:])
+      if match and do:
         num1, num2 = map(int, match.groups())
         count += num1 * num2
             
