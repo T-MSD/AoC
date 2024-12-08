@@ -41,7 +41,46 @@ def find_xmas(grid):
 
     return count
 
+def find_mas(grid):
+  Ms = [
+      [(-1, -1), (-1, 1)],
+      [(-1, 1), (1, 1)],
+      [(1, 1), (1, -1)],
+      [(-1, -1), (1, -1)]
+  ]
+  
+  Ss = [
+     [(1, -1), (1, 1)],
+     [(-1, -1), (1, -1)],
+     [(-1, -1), (-1, 1)],
+     [(-1, 1), (1, 1)]
+  ]
+
+  rows, cols = len(grid), len(grid[0])
+  count = 0
+
+  def check_diag(x, y, m, s):
+      mx1, my1 = x + m[0][0], y + m[0][1]
+      mx2, my2 = x + m[1][0], y + m[1][1]
+      sx1, sy1 = x + s[0][0], y + s[0][1]
+      sx2, sy2 = x + s[1][0], y + s[1][1]
+
+      if not (0 <= mx1 < rows and 0 <= my1 < cols) or \
+        not (0 <= mx2 < rows and 0 <= my2 < cols) or \
+        not (0 <= sx1 < rows and 0 <= sy1 < cols) or \
+        not (0 <= sx2 < rows and 0 <= sy2 < cols):
+          return False
+      return (grid[mx1][my1] == "M" and grid[mx2][my2] == "M" and grid[sx1][sy1] == "S" and grid[sx2][sy2] == "S")
+
+  for row in range(rows):
+        for col in range(cols):
+            if grid[row][col] == "A":
+              for index in range(len(Ms)):
+                if check_diag(row, col, Ms[index], Ss[index]):
+                    count += 1
+  return count
+
 if __name__ == "__main__":
   grid = read_input('input.txt')
-  score = find_xmas(grid)
+  score = find_mas(grid)
   print(score)
